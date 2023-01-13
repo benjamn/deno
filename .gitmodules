@@ -10,3 +10,6 @@
 	path = test_util/wpt
 	url = https://github.com/web-platform-tests/wpt.git
 
+[submodule "rusty_v8"]
+	path = rusty_v8
+	url = https://github.com/benjamn/rusty_v8.git

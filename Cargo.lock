@@ -83,6 +83,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "align-data"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1926655ba000b19e21f0402be09a1d52d318c8a8a68622870bfb7af2a71315cd"
+
+[[package]]
 name = "alloc-no-stdlib"
 version = "2.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5329,12 +5335,12 @@ dependencies = [
 [[package]]
 name = "v8"
 version = "0.60.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07fd5b3ed559897ff02c0f62bc0a5f300bfe79bb4c77a50031b8df771701c628"
 dependencies = [
+ "align-data",
  "bitflags",
  "fslock",
  "lazy_static",
+ "trybuild",
  "which",
 ]
 
