@@ -1182,6 +1182,7 @@ dependencies = [
  "deno_napi",
  "deno_net",
  "deno_node",
+ "deno_subtext",
  "deno_tls",
  "deno_url",
  "deno_web",
@@ -1214,6 +1215,13 @@ dependencies = [
  "uuid",
  "winapi",
  "winres",
+]
+
+[[package]]
+name = "deno_subtext"
+version = "0.1.0"
+dependencies = [
+ "deno_core",
 ]
 
 [[package]]

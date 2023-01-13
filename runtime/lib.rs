@@ -12,6 +12,7 @@ pub use deno_http;
 pub use deno_napi;
 pub use deno_net;
 pub use deno_node;
+pub use deno_subtext;
 pub use deno_tls;
 pub use deno_url;
 pub use deno_web;

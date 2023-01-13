@@ -4,6 +4,7 @@ use std::option::Option;
 use std::os::raw::c_void;
 
 use log::debug;
+use serde_v8::to_v8;
 use v8::fast_api::FastFunction;
 use v8::MapFnTo;
 
@@ -34,6 +35,12 @@ pub fn external_references(
     },
     v8::ExternalReference {
       function: empty_fn.map_fn_to(),
+    },
+    v8::ExternalReference {
+      function: create_subtext.map_fn_to(),
+    },
+    v8::ExternalReference {
+      function: access_subtext.map_fn_to(),
     },
   ];
 
@@ -134,6 +141,8 @@ pub fn initialize_context<'s>(
   // Bind functions to Deno.core.*
   set_func(scope, core_obj, "callConsole", call_console);
 
+  set_func(scope, core_obj, "createSubtext", create_subtext);
+
   // Bind v8 console object to Deno.core.console
   let extra_binding_obj = context.get_extras_binding_object(scope);
   let console_str = v8::String::new(scope, "console").unwrap();
@@ -231,6 +240,91 @@ pub fn set_func_raw(
   let val = templ.get_function(scope).unwrap();
   val.set_name(key);
   obj.set(scope, key.into(), val.into());
+}
+
+fn get_subtext<'s>(
+  scope: &mut v8::HandleScope<'s>,
+) -> v8::Local<'s, v8::Array> {
+  let context = scope.get_current_context();
+  let subtext = context.get_continuation_preserved_embedder_data(scope);
+  if subtext.is_null_or_undefined() {
+    let array = v8::Array::new(scope, 0);
+    let local = v8::Local::new(scope, array);
+    context.set_continuation_preserved_embedder_data(local.into());
+    context.get_continuation_preserved_embedder_data(scope)
+  } else {
+    subtext
+  }.try_into().unwrap()
+}
+
+fn create_subtext(
+  scope: &mut v8::HandleScope,
+  args: v8::FunctionCallbackArguments,
+  mut rv: v8::ReturnValue,
+) {
+  let data = v8::Array::new(scope, 0);
+  data.push(scope, args.get(0));
+
+  let subtext = get_subtext(scope);
+  let index = subtext.push(scope, args.get(0));
+  let index = v8::Integer::new(scope, index.try_into().unwrap());
+  data.push(scope, index.into());
+
+  let accessor = v8::FunctionTemplate::builder(access_subtext)
+    .data(data.into())
+    .build(scope)
+    .get_function(scope)
+    .unwrap();
+
+  rv.set(accessor.into());
+}
+
+pub fn access_subtext(
+  scope: &mut v8::HandleScope,
+  args: v8::FunctionCallbackArguments,
+  mut rv: v8::ReturnValue,
+) {
+  let subtext_array = get_subtext(scope);
+  let data = args.data();
+  let tuple = v8::Local::<v8::Array>::try_from(data).unwrap();
+  let tuple_key_index = to_v8(scope, 1).unwrap();
+  let key = tuple.get(scope, tuple_key_index).unwrap();
+
+  if args.length() == 0 {
+    let value = subtext_array.get(scope, key).unwrap();
+    rv.set(if value.is_null_or_undefined() {
+      // Return the default value for this subtextual slot.
+      let default_value_index = to_v8(scope, 0).unwrap();
+      tuple.get(scope, default_value_index).unwrap()
+    } else {
+      value
+    });
+  } else {
+    let new_value = args.get(0);
+    let callback = args.get(1);
+    let callback_this = args.this();
+    if let Ok(callback) = v8::Local::<v8::Function>::try_from(callback) {
+      let subtext_as_value = v8::Local::<v8::Value>::try_from(subtext_array).unwrap();
+      let new_subtext = v8::Array::from(scope, subtext_as_value);
+      new_subtext.set(scope, key, new_value);
+
+      let context = scope.get_current_context();
+      context.set_continuation_preserved_embedder_data(new_subtext.into());
+
+      let result = callback.call(
+        scope,
+        // Inherit `this` from subtext function invocation.
+        callback_this.into(),
+        &[],
+      );
+
+      context.set_continuation_preserved_embedder_data(subtext_as_value);
+
+      if let Some(value) = result {
+        rv.set(value);
+      }
+    }
+  }
 }
 
 pub extern "C" fn wasm_async_resolve_promise_callback(
