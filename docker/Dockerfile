@@ -45,5 +45,9 @@ RUN cargo build -vv
 WORKDIR /home/deno/deno
 RUN cargo build -vv --workspace
 
+# Remove large and no longer necessary depot_tools and gclient config
+RUN rm -rf /home/deno/depot_tools
+RUN rm -rf /home/deno/deno/rusty_v8/deno-v8
+
 # Run target/debug/deno with whatever arguments were passed to the container
 ENTRYPOINT ["/home/deno/deno/target/debug/deno"]
