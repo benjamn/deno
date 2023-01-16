@@ -57,3 +57,5 @@ WORKDIR /deno
 
 # Run target/debug/deno with whatever arguments were passed to the container
 ENTRYPOINT ["/home/deno/deno/target/debug/deno"]
+# This default argument can be overridden by docker run
+CMD ["--help"]
