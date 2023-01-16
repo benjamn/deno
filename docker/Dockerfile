@@ -1,5 +1,5 @@
 # Start from an alpine Linux docker image with rust build tools
-FROM rustlang/rust:nightly-bullseye
+FROM rustlang/rust:nightly-bullseye-slim
 
 RUN apt-get update && apt-get install -y git curl python3 make g++ ccache libglib2.0-dev lsb-release
 RUN ln -s /usr/bin/python3 /usr/bin/python
