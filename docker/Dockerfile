@@ -49,5 +49,11 @@ RUN cargo build -vv --workspace
 RUN rm -rf /home/deno/depot_tools
 RUN rm -rf /home/deno/deno/rusty_v8/deno-v8
 
+# Create a volume and workdir for deno to run in (not the same as the build
+# directory). Runners can mount local directories as /deno to share files easily
+# with the container.
+VOLUME /deno
+WORKDIR /deno
+
 # Run target/debug/deno with whatever arguments were passed to the container
 ENTRYPOINT ["/home/deno/deno/target/debug/deno"]
