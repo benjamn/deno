@@ -40,7 +40,6 @@ mod ts {
     let mut op_crate_libs = HashMap::new();
     op_crate_libs.insert("deno.cache", deno_cache::get_declaration());
     op_crate_libs.insert("deno.console", deno_console::get_declaration());
-    op_crate_libs.insert("deno.subtext", deno_subtext::get_declaration());
     op_crate_libs.insert("deno.url", deno_url::get_declaration());
     op_crate_libs.insert("deno.web", deno_web::get_declaration());
     op_crate_libs.insert("deno.fetch", deno_fetch::get_declaration());

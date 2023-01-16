@@ -13,6 +13,3 @@ pub fn init() -> Extension {
     .build()
 }
 
-pub fn get_declaration() -> PathBuf {
-  PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("lib.deno_subtext.d.ts")
-}
