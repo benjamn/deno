@@ -41,14 +41,14 @@ RUN mkdir -p $CARGO_HOME
 
 # Run cargo build -vv within deno/rusty_v8 directory
 WORKDIR /home/deno/deno/rusty_v8
-RUN cargo build -vv
+RUN cargo build -vv --profile=release
 
 # Allow running cargo prune after the cargo build -vv command below
 RUN cargo install cargo-prune
 
 # Run cargo build -vv within /home/deno/deno directory
 WORKDIR /home/deno/deno
-RUN cargo build -vv --workspace && cargo prune
+RUN cargo build -vv --workspace --profile=release && cargo prune
 
 # Remove large and no longer necessary depot_tools and gclient config
 RUN rm -rf /home/deno/depot_tools
@@ -61,6 +61,6 @@ VOLUME /deno
 WORKDIR /deno
 
 # Run target/debug/deno with whatever arguments were passed to the container
-ENTRYPOINT ["/home/deno/deno/target/debug/deno"]
+ENTRYPOINT ["/home/deno/deno/target/release/deno"]
 # This default argument can be overridden by docker run
 CMD ["--help"]
