@@ -1,7 +1,9 @@
 # Start from an alpine Linux docker image with rust build tools
 FROM rustlang/rust:nightly-bullseye-slim
 
-RUN apt-get update && apt-get install -y git curl python3 make g++ ccache libglib2.0-dev lsb-release
+RUN apt-get update && \
+    apt-get install -y git curl python3 make g++ ccache libglib2.0-dev lsb-release && \
+    apt-get clean
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Add a non-root user called "deno" to use when running the container
@@ -41,9 +43,12 @@ RUN mkdir -p $CARGO_HOME
 WORKDIR /home/deno/deno/rusty_v8
 RUN cargo build -vv
 
+# Allow running cargo prune after the cargo build -vv command below
+RUN cargo install cargo-prune
+
 # Run cargo build -vv within /home/deno/deno directory
 WORKDIR /home/deno/deno
-RUN cargo build -vv --workspace
+RUN cargo build -vv --workspace && cargo prune
 
 # Remove large and no longer necessary depot_tools and gclient config
 RUN rm -rf /home/deno/depot_tools
