@@ -1,5 +1,4 @@
-# Start from an alpine Linux docker image with rust build tools
-FROM rustlang/rust:nightly-bullseye-slim
+FROM ubuntu:lunar-20221216
 
 COPY ./setup.sh /tmp/setup.sh
 RUN /tmp/setup.sh

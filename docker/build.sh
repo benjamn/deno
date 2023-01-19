@@ -3,6 +3,18 @@ set -euo pipefail
 
 cd /home/deno
 
+export CARGO_HOME=/home/deno/.cargo
+mkdir -p $CARGO_HOME
+
+# Install nightly Rust toolchain locally for deno user
+export PATH="${PATH}:${CARGO_HOME}/bin"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
+    sh -s -- --default-toolchain nightly -y
+
+# Make sure that installation worked.
+which cargo
+rustc --version
+
 # Clone the depot_tools repository into /home/deno/depot_tools
 git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
 export PATH="${PATH}:/home/deno/depot_tools"
@@ -23,11 +35,6 @@ $GCLIENT sync
 export V8_FROM_SOURCE=1
 export RUST_BACKTRACE=1
 
-# Attempting to reduce memory usage of crates.io update
-# ENV CARGO_UNSTABLE_SPARSE_REGISTRY=true
-export CARGO_HOME=/home/deno/.cargo
-mkdir -p $CARGO_HOME
-
 # Run cargo build -vv within deno/rusty_v8 directory
 cd /home/deno/deno/rusty_v8
 cargo build -vv --profile=release
@@ -40,6 +47,11 @@ cargo build -vv --workspace --profile=release
 # /home/deno/bin/deno as the ENTRYPOINT in the main Dockerfile
 mkdir -p /home/deno/bin
 mv /home/deno/deno/target/release/deno /home/deno/bin/deno
+
+# Remove the nightly Rust toolchain to save space in the docker image
+# (approximately 1.2GB per toolchain). This only works if we installed Rust
+# locally in the same layer, as we did earlier in this build.sh script.
+rustup self uninstall -y
 
 # Remove unnecessary build-related directories and files
 cd /home/deno
