@@ -8,12 +8,6 @@ USER deno
 COPY ./deno-build.sh /tmp/deno-build.sh
 RUN /tmp/deno-build.sh
 
-# Create a volume and workdir for deno to run in (not the same as the build
-# directory). Runners can mount local directories as /deno to share files easily
-# with the container.
-VOLUME /deno
-WORKDIR /deno
-
 # Run target/debug/deno with whatever arguments were passed to the container.
 # This can be overridden by passing `--entrypoint <other cmd>` to docker run.
 ENTRYPOINT ["/home/deno/bin/deno"]
