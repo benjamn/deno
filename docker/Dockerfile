@@ -1,13 +1,11 @@
 FROM ubuntu:lunar-20221216
 
-# That adduser command is less obnoxiously interactive than the useradd command,
-# but it is not already installed in the minimal ubuntu base image.
-RUN apt-get update && apt-get install -y adduser && apt-get clean
-RUN adduser deno --home /home/deno
-
 # Since Deno is a single standalone static binary, we can get away with copying
 # only that one file (just 89MB) from the benjamn/deno-builder image.
 COPY --from=benjamn/deno-builder /home/deno/bin/deno /usr/local/bin/deno
+
+# The -ms /bin/bash flags create /home/deno and set the default shell to bash.
+RUN useradd -ms /bin/bash deno
 
 # Set the directory Docker.cwd() returns. This allows docker runners to mount
 # local directories using -v $(pwd):/deno, so deno can easily see files on the
