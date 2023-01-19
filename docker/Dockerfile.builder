@@ -1,8 +1,12 @@
 FROM ubuntu:lunar-20221216
 
-# Since Deno is a single standalone static binary, we can get away with copying
-# only that one file (just 89MB) from the benjamn/deno-builder image.
-COPY --from=benjamn/deno-builder /home/deno/bin/deno /usr/local/bin/deno
+COPY ./deno-setup.sh /tmp/deno-setup.sh
+RUN /tmp/deno-setup.sh
+
+USER deno
+
+COPY ./deno-build.sh /tmp/deno-build.sh
+RUN /tmp/deno-build.sh
 
 # Create a volume and workdir for deno to run in (not the same as the build
 # directory). Runners can mount local directories as /deno to share files easily
@@ -12,6 +16,6 @@ WORKDIR /deno
 
 # Run target/debug/deno with whatever arguments were passed to the container.
 # This can be overridden by passing `--entrypoint <other cmd>` to docker run.
-ENTRYPOINT ["/usr/local/bin/deno"]
+ENTRYPOINT ["/home/deno/bin/deno"]
 # Show help instead of REPL if deno was invoked with no arguments.
 CMD ["--help"]
