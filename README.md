@@ -9,7 +9,7 @@ Deno is a _simple_, _modern_ and _secure_ runtime for **JavaScript** and
 
 ## Purpose of this fork ([`benjamn/deno`](https://github.com/benjamn/deno))
 
-This repository is a friendly fork of [Deno](https://github.com/denoland/deno), enabling [me](https://github.com/benjamn) to publish various experimental/custom builds of Deno for my own use and for demonstration purposes. In particular, I've done my best to wrap the standalone `/usr/local/bin/deno` binary (built on Linux) inside some relatively small [Docker](https://www.docker.com/) images that are tolerable to `docker pull` (162MB, down from 25GB originally).
+This repository is a friendly fork of [Deno](https://github.com/denoland/deno), enabling [me](https://github.com/benjamn) to publish various experimental/custom builds of Deno for my own use and for demonstration purposes. In particular, I've done my best to wrap the standalone `/usr/local/bin/deno` binary (built on Linux) inside some relatively small [Docker](https://www.docker.com/) images that are tolerable to `docker pull` ([162MB, down from 25GB originally](https://github.com/benjamn/deno/pull/1#discussion_r1083033582)).
 
 Docker is not the only way to use this fork of Deno. You can, of course, build the project from source locally, and the [`deno-setup.sh`](https://github.com/benjamn/deno/blob/docker-builds/docker/deno-setup.sh) and [`deno-build.sh`](https://github.com/benjamn/deno/blob/docker-builds/docker/deno-build.sh) scripts are good references for how to do that (at least on a UNIX system).
 
