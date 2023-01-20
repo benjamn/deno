@@ -39,10 +39,8 @@ rustup self uninstall -y
 
 # Remove unnecessary build-related directories and files
 cd /home/deno
-rm -rf $CARGO_HOME
-rm -rf deno
-rm -rf depot_tools
+rm -rf .cargo deno
 # This .vpython-root directory is owned by deno, but some of its contents are
 # not writable, and thus cannot be removed.
 chmod -R +w .vpython*
-rm -rf .vpython* .cache .gsutil
+rm -rf .vpython* .cache .gsutil depot_tools
