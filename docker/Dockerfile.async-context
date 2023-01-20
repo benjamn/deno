@@ -1,8 +1,10 @@
 FROM ubuntu:lunar-20221216
 
+# See ./docker-build-all.sh for commands for building this image.
+
 # Since Deno is a single standalone static binary, we can get away with copying
 # only that one file (just 89MB) from the benjamn/deno-builder image.
-COPY --from=benjamn/deno-builder /home/deno/bin/deno /usr/local/bin/deno
+COPY --from=benjamn/deno-async-context-builder /home/deno/bin/deno /usr/local/bin/deno
 
 # The -ms /bin/bash flags create /home/deno and set the default shell to bash.
 RUN useradd -ms /bin/bash deno

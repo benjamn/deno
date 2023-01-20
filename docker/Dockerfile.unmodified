@@ -1,0 +1,25 @@
+FROM ubuntu:lunar-20221216
+
+# See ./docker-build-all.sh for commands for building this image.
+
+# Since Deno is a single standalone static binary, we can get away with copying
+# only that one file (just 89MB) from the benjamn/deno-builder image.
+COPY --from=benjamn/deno-unmodified-builder /home/deno/bin/deno /usr/local/bin/deno
+
+# The -ms /bin/bash flags create /home/deno and set the default shell to bash.
+RUN useradd -ms /bin/bash deno
+
+# Set the directory Docker.cwd() returns. This allows docker runners to mount
+# local directories using -v $(pwd):/deno, so deno can easily see files on the
+# host. I thought about using /home/deno, but that's a little longer to type on
+# the command line, and home directories tend not to be completely empty.
+RUN mkdir /deno && chown deno:deno /deno
+WORKDIR /deno
+
+# Prevent deno from running as root.
+USER deno
+
+# Run deno with whatever arguments were passed to the container. This can be
+# overridden by passing `--entrypoint <other cmd>` to docker run. Make sure to
+# pass -it to docker run when using the deno REPL (default no-args behavior)!
+ENTRYPOINT ["/usr/local/bin/deno"]
