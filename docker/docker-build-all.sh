@@ -5,6 +5,8 @@ set -euo pipefail
 # https://github.com/denoland/rusty_v8/#readme for more details about the build
 # process and why it takes this long.
 
+docker build . -f ./Dockerfile.base.builder -t benjamn/deno:builder-base
+
 # docker build . -f ./Dockerfile.unmodified.builder -t benjamn/deno:unmodified-builder
 # docker build . -f ./Dockerfile.unmodified -t benjamn/deno:unmodified
 

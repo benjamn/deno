@@ -4,26 +4,6 @@ set -euo pipefail
 GIT_BRANCH="${1:-main}"
 echo "Building benjamn/deno from branch $GIT_BRANCH"
 
-cd /home/deno
-
-export CARGO_HOME=/home/deno/.cargo
-mkdir -p $CARGO_HOME
-
-# Install nightly Rust toolchain locally for deno user
-export PATH="${PATH}:${CARGO_HOME}/bin"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
-    sh -s -- --default-toolchain nightly -y
-
-# Make sure that installation worked.
-which cargo
-rustc --version
-
-# Clone the depot_tools repository into /home/deno/depot_tools
-git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
-export PATH="${PATH}:/home/deno/depot_tools"
-export GCLIENT=/home/deno/depot_tools/gclient
-
-
 # Clone the deno repository into /home/deno/deno
 git clone \
     --depth 1 \

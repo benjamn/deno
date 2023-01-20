@@ -9,4 +9,4 @@ apt-get clean
 ln -s /usr/bin/python3 /usr/bin/python
 
 # Add a non-root user called "deno" to use when running the container
-adduser deno --home /home/deno
+adduser deno --home $HOME --disabled-password --gecos ""
