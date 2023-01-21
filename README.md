@@ -1,12 +1,37 @@
 # Deno
 
-[![Build Status - Cirrus][]][Build status] [![Twitter handle][]][Twitter badge]
 [![Discord Chat](https://img.shields.io/discord/684898665143206084?logo=discord&style=social)](https://discord.gg/deno)
 
 <img align="right" src="https://deno.land/logo.svg" height="150px" alt="the deno mascot dinosaur standing in the rain">
 
 Deno is a _simple_, _modern_ and _secure_ runtime for **JavaScript** and
 **TypeScript** that uses V8 and is built in Rust.
+
+## Purpose of this fork ([`benjamn/deno`](https://github.com/benjamn/deno))
+
+This repository is a friendly fork of [Deno](https://github.com/denoland/deno), enabling [me](https://github.com/benjamn) to publish various experimental/custom builds of Deno for my own use and for demonstration purposes. In particular, I've done my best to wrap the standalone `/usr/local/bin/deno` binary (built on Linux) inside some relatively small [Docker](https://www.docker.com/) images that are tolerable to `docker pull` ([162MB, down from 25GB originally](https://github.com/benjamn/deno/pull/1#discussion_r1083033582)).
+
+Docker is not the only way to use this fork of Deno. You can, of course, build the project from source locally, and the [`deno-setup.sh`](https://github.com/benjamn/deno/blob/docker-builds/docker/deno-setup.sh) and [`deno-build.sh`](https://github.com/benjamn/deno/blob/docker-builds/docker/deno-build.sh) scripts are good references for how to do that (at least on a UNIX system).
+
+You can find the Docker-based commands for building these four tagged images in the [`docker-build-all.sh`](https://github.com/benjamn/deno/blob/docker-builds/docker/docker-build-all.sh) script:
+
+* `benjamn/deno:unmodified-builder` (heavyweight compilation, plain)
+  * `benjamn/deno:unmodified` (derived from builder)
+* `benjamn/deno:async-context-builder` (heavyweight compilation, custom fork)
+  * `benjamn/deno:async-context` (derived from builder)
+
+If you have Docker installed and running, you can fire up the [Deno REPL](https://deno.land/manual@v1.29.1/tools/repl) using these images by running either of the following commands:
+```sh
+docker run -it --rm benjamn/deno:unmodified repl
+docker run -it --rm benjamn/deno:async-context repl
+```
+With both commands, the `-it` is necessary for an interactive persistent shell, and `--rm` helps clean up the images after each one exits. The logged in user is named `deno`, and does not have root or `sudo` access, but does have a `/home/deno` home directory. The default working directory is `/deno`, which can be overridden using the `-v $(pwd):/deno` flag, as in
+```sh
+docker run -it --rm -v $(pwd):/deno benjamn/deno:async-context test --allow-read some.tests.ts
+```
+where `some.tests.ts` is a file in whatever local directory `docker run` was executed in… on the _host_ computer! This directory-mounting ability is remarkably powerful here, since it allows an Ubuntu-built `deno` binary to read/process/write files checked out on, say, Mac OS X, without me having to publish a bunch of binary builds for different platforms.
+
+With the `:async-context` image, you'll find a prototype implementation of the [`AsyncContext` proposal](https://github.com/legendecas/proposal-async-context) available globally, in case you want to play with that. I hope this system proves flexible enough to prototype other ECMAScript and TypeScript extensions as well as `AsyncContext`.
 
 ### Features
 
