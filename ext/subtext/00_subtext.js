@@ -16,13 +16,18 @@
     return storage();
   }
 
+  // Use a WeakMap to store the default value for each AsyncContext. We could
+  // put these defaults in the Map directly, but then they would be kept alive
+  // even if/after the corresponding AsyncContext object is garbage collected.
+  const defaults = new WeakMap();
+
   class AsyncContext {
     constructor(options = {}) {
-      this.default = options.default;
+      defaults.set(this, options.default);
     }
     get() {
       const map = getMap();
-      return map.has(this) ? map.get(this) : this.default;
+      return map.has(this) ? map.get(this) : defaults.get(this);
     }
     run(value, fn, ...args) {
       const cloned = new Map(getMap());
