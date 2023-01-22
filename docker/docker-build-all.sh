@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+cd "$(dirname $0)"
+
 # Fair warning: these builds can take more than an hour. See
 # https://github.com/denoland/rusty_v8/#readme for more details about the build
 # process and why it takes this long.
