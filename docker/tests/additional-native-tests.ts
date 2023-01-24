@@ -30,4 +30,52 @@ describe("async via native async/await", () => {
     });
     assert.strictEqual(ctxRunResult, "ctx.run result 👋");
   });
+
+  it("works with thenables", async () => {
+    const ctx = new AsyncContext();
+    const queue: string[] = [];
+    const thenable = {
+      then(onRes: (result: string) => any) {
+        const message = "thenable: " + ctx.get();
+        queue.push(message);
+        return Promise.resolve(message).then(onRes);
+      },
+    };
+
+    return ctx.run("running", async () => {
+      assert.strictEqual(ctx.get(), "running");
+
+      assert.strictEqual(
+        await new Promise<any>(res => res(thenable)),
+        "thenable: running",
+      );
+
+      await Promise.resolve(thenable).then(t => t).then(async result => {
+        assert.strictEqual(result, "thenable: running");
+        return ctx.run("inner", async () => {
+          assert.strictEqual(ctx.get(), "inner");
+          assert.strictEqual(await thenable, "thenable: inner");
+          assert.strictEqual(ctx.get(), "inner");
+          return "👋 from inner ctx.run";
+        });
+      }).then(innerResult => {
+        assert.strictEqual(ctx.get(), "running");
+        assert.strictEqual(innerResult, "👋 from inner ctx.run");
+      });
+
+      assert.strictEqual(ctx.get(), "running");
+
+      return thenable;
+
+    }).then(thenableResult => {
+      assert.strictEqual(thenableResult, "thenable: running");
+      assert.strictEqual(ctx.get(), void 0);
+      assert.deepStrictEqual(queue, [
+        "thenable: running",
+        "thenable: running",
+        "thenable: inner",
+        "thenable: running",
+      ]);
+    });
+  });
 });

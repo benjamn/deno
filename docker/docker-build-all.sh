@@ -13,4 +13,5 @@ docker build . -f ./Dockerfile.base.builder -t benjamn/deno:builder-base
 # docker build . -f ./Dockerfile.unmodified -t benjamn/deno:unmodified
 
 docker build . -f Dockerfile.async-context.builder -t benjamn/deno:async-context-builder
-docker build . -f Dockerfile.async-context -t benjamn/deno:async-context
+# docker build . -f Dockerfile.async-context -t benjamn/deno:async-context
+docker build . -f Dockerfile.async-context -t benjamn/deno:async-thenables

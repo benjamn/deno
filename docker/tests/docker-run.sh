@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-DENO_IMAGE=${1:-benjamn/deno:async-context}
+DENO_IMAGE=${1:-benjamn/deno:async-thenables}
 echo "Running tests using $DENO_IMAGE"
 
 # Try changing :async-context to :unmodified to observe the tests fail, most
