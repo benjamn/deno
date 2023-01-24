@@ -247,14 +247,15 @@ fn get_subtext<'s>(
 ) -> v8::Local<'s, v8::Array> {
   let context = scope.get_current_context();
   let subtext = context.get_continuation_preserved_embedder_data(scope);
-  if subtext.is_null_or_undefined() {
+  if let Ok(array) = v8::Local::<v8::Array>::try_from(subtext) {
+    array
+  } else {
     let array = v8::Array::new(scope, 0);
     let local = v8::Local::new(scope, array);
     context.set_continuation_preserved_embedder_data(local.into());
-    context.get_continuation_preserved_embedder_data(scope)
-  } else {
-    subtext
-  }.try_into().unwrap()
+    // context.get_continuation_preserved_embedder_data(scope)
+    local
+  }
 }
 
 fn create_subtext(
