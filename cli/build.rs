@@ -292,6 +292,7 @@ fn create_cli_snapshot(snapshot_path: PathBuf, files: Vec<PathBuf>) {
   let extensions: Vec<Extension> = vec![
     deno_webidl::init(),
     deno_console::init(),
+    deno_subtext::init(),
     deno_url::init(),
     deno_tls::init(),
     deno_web::init::<PermissionsContainer>(

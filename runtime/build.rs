@@ -123,6 +123,7 @@ mod not_docs {
     let extensions_with_js: Vec<Extension> = vec![
       deno_webidl::init(),
       deno_console::init(),
+      deno_subtext::init(),
       deno_url::init(),
       deno_tls::init(),
       deno_web::init::<Permissions>(

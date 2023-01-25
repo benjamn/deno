@@ -26,6 +26,7 @@
   const { webidl } = window.__bootstrap;
   const { reportException } = window.__bootstrap.event;
   const { assert } = window.__bootstrap.infra;
+  const { AsyncContext } = window.__bootstrap.subtext;
 
   const hrU8 = new Uint8Array(8);
   const hr = new Uint32Array(hrU8.buffer);
@@ -130,7 +131,7 @@
 
     // 9. Let task be a task that runs the following steps:
     const task = {
-      action: () => {
+      action: AsyncContext.wrap(() => {
         // 1. If id does not exist in global's map of active timers, then abort
         // these steps.
         //
@@ -171,7 +172,7 @@
           core.tryClose(timerInfo.cancelRid);
           MapPrototypeDelete(activeTimers, id);
         }
-      },
+      }),
 
       // 10. Increment nesting level by one.
       // 11. Set task's timer nesting level to nesting level.

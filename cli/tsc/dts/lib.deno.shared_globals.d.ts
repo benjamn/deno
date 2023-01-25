@@ -682,3 +682,15 @@ interface ErrorConstructor {
   // TODO(nayeemrmn): Support `Error.prepareStackTrace()`. We currently use this
   // internally in a way that makes it unavailable for users.
 }
+
+/** @category ECMAScript proposals */
+declare class AsyncContext<T> {
+  constructor(options?: { default: T });
+  static wrap<F extends (...args: any[]) => any>(fn: F): F;
+  run<F extends (...args: any[]) => any>(
+    value: T,
+    fn: F,
+    ...args: Parameters<F>
+  ): ReturnType<F>;
+  get(): T;
+}

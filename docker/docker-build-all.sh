@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+cd "$(dirname $0)"
+
 # Fair warning: these builds can take more than an hour. See
 # https://github.com/denoland/rusty_v8/#readme for more details about the build
 # process and why it takes this long.
@@ -11,4 +13,5 @@ docker build . -f ./Dockerfile.base.builder -t benjamn/deno:builder-base
 # docker build . -f ./Dockerfile.unmodified -t benjamn/deno:unmodified
 
 docker build . -f Dockerfile.async-context.builder -t benjamn/deno:async-context-builder
-docker build . -f Dockerfile.async-context -t benjamn/deno:async-context
+# docker build . -f Dockerfile.async-context -t benjamn/deno:async-context
+docker build . -f Dockerfile.async-context -t benjamn/deno:async-thenables

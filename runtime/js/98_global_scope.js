@@ -39,11 +39,13 @@
   const globalInterfaces = window.__bootstrap.globalInterfaces;
   const webStorage = window.__bootstrap.webStorage;
   const prompt = window.__bootstrap.prompt;
+  const subtext = window.__bootstrap.subtext;
 
   // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope
   const windowOrWorkerGlobalScope = {
     AbortController: util.nonEnumerable(abortSignal.AbortController),
     AbortSignal: util.nonEnumerable(abortSignal.AbortSignal),
+    AsyncContext: util.nonEnumerable(subtext.AsyncContext),
     Blob: util.nonEnumerable(file.Blob),
     ByteLengthQueuingStrategy: util.nonEnumerable(
       streams.ByteLengthQueuingStrategy,

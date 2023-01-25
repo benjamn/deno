@@ -23,6 +23,7 @@ impl deno_web::TimersPermission for Permissions {
 fn setup() -> Vec<Extension> {
   vec![
     deno_webidl::init(),
+    deno_subtext::init(),
     deno_url::init(),
     deno_console::init(),
     deno_web::init::<Permissions>(BlobStore::default(), None),

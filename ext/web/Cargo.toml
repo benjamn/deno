@@ -17,6 +17,7 @@ path = "lib.rs"
 async-trait.workspace = true
 base64-simd = "0.7"
 deno_core.workspace = true
+deno_subtext.workspace = true
 encoding_rs.workspace = true
 flate2.workspace = true
 serde = "1.0.149"
@@ -26,6 +27,7 @@ uuid = { workspace = true, features = ["serde"] }
 [dev-dependencies]
 deno_bench_util.workspace = true
 deno_console.workspace = true
+deno_subtext.workspace = true
 deno_url.workspace = true
 deno_webidl.workspace = true
 
