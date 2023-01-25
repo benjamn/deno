@@ -11,5 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Run AsyncContext tests with benjamn/deno:async-context
-      run: docker/tests/docker-run.sh benjamn/deno:async-context
+    - name: Run AsyncContext tests with benjamn/deno:async-thenables
+      run: docker/tests/docker-run.sh benjamn/deno:async-thenables
+      # run: docker/tests/docker-run.sh benjamn/deno:async-context
